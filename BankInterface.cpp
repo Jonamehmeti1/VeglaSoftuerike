@@ -11,6 +11,7 @@ private:
     double balance;
 
 public:
+    // Constructor
     BankAccount(string accNum, string accHolder, double initialBalance) {
         accountNumber = accNum;
         accountHolderName = accHolder;
@@ -20,6 +21,7 @@ public:
         }
     }
 
+    // Deposit money into the account
     void deposit(double amount) {
         if (amount > 0) {
             balance += amount;
@@ -29,6 +31,7 @@ public:
         }
     }
 
+    // Withdraw money from the account
     void withdraw(double amount) {
         if (amount > 0 && amount <= balance) {
             balance -= amount;
@@ -38,16 +41,19 @@ public:
         }
     }
 
+    // Transfer money to another account
     void transfer(BankAccount &recipient, double amount) {
         if (amount > 0 && amount <= balance) {
             balance -= amount;
             recipient.balance += amount;
-            cout << "Transferi u krye me sukses te " << recipient.accountHolderName << " me shumën $" << fixed << setprecision(2) << amount << endl;
+            cout << "Transferi u krye me sukses te " << recipient.accountHolderName 
+                 << " me shumën $" << fixed << setprecision(2) << amount << endl;
         } else {
             cout << "Transferi nuk mund të kryhet. Bilanci juaj është i pamjaftueshëm!" << endl;
         }
     }
 
+    // Display account details
     void displayAccountInfo() {
         cout << "\nDetajet e Llogarisë:\n";
         cout << "Numri i Llogarisë: " << accountNumber << endl;
@@ -55,6 +61,7 @@ public:
         cout << "Bilanci: $" << fixed << setprecision(2) << balance << endl;
     }
 
+    // Getter for balance
     double getBalance() {
         return balance;
     }
@@ -63,9 +70,9 @@ public:
 int main() {
     string accNum1, accHolder1, accNum2, accHolder2;
     double initBalance1, initBalance2, amount;
-    char choice;
+    string choice;
 
-    // Krijimi i dy llogarive bankare
+    // Create first bank account
     cout << "Krijoni llogarinë e parë\n";
     cout << "Shkruani numrin e llogarisë: ";
     cin >> accNum1;
@@ -77,6 +84,7 @@ int main() {
 
     BankAccount account1(accNum1, accHolder1, initBalance1);
 
+    // Create second bank account for transfers
     cout << "\nKrijoni llogarinë e dytë (për transferime)\n";
     cout << "Shkruani numrin e llogarisë: ";
     cin >> accNum2;
@@ -88,34 +96,34 @@ int main() {
 
     BankAccount account2(accNum2, accHolder2, initBalance2);
 
-    // Shfaqja e detajeve të llogarive
+    // Display initial account details
     account1.displayAccountInfo();
     account2.displayAccountInfo();
 
-    // Depozitim
+    // Deposit Money
     cout << "\nA dëshironi të depozitoni para në llogarinë e parë? (P - PO, ndryshe JO): ";
     cin >> choice;
-    if (choice == 'P' || choice == 'p') {
+    if (choice == "P" || choice == "p") {
         cout << "Shkruani shumën: $";
         cin >> amount;
         account1.deposit(amount);
         account1.displayAccountInfo();
     }
 
-    // Tërheqje
+    // Withdraw Money
     cout << "\nA dëshironi të tërhiqni para nga llogaria e parë? (T - PO, ndryshe JO): ";
     cin >> choice;
-    if (choice == 'T' || choice == 't') {
+    if (choice == "T" || choice == "t") {
         cout << "Shkruani shumën: $";
         cin >> amount;
         account1.withdraw(amount);
         account1.displayAccountInfo();
     }
 
-    // Transferim
+    // Transfer Money
     cout << "\nA dëshironi të transferoni para nga llogaria e parë te llogaria e dytë? (Tr - PO, ndryshe JO): ";
     cin >> choice;
-    if (choice == 'T' || choice == 't') {
+    if (choice == "Tr" || choice == "tr") {  // FIXED: Correctly checking for 'Tr'
         cout << "Shkruani shumën për transferim: $";
         cin >> amount;
         account1.transfer(account2, amount);
