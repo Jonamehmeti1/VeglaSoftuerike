@@ -1,39 +1,67 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
+
 using namespace std;
 
-struct BankAccount {
+class BankAccount {
+private:
     string accountNumber;
     string accountHolderName;
     double balance;
+
+public:
+    BankAccount(string accNum, string accHolder, double initialBalance) {
+        accountNumber = accNum;
+        accountHolderName = accHolder;
+        balance = (initialBalance >= 0) ? initialBalance : 0;
+        if (initialBalance < 0) {
+            cout << "Bilanci fillestar nuk mund të jetë negativ. Vendoset në $0.00" << endl;
+        }
+    }
+
+    void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            cout << "Depozitimi u krye me sukses: $" << fixed << setprecision(2) << amount << endl;
+        } else {
+            cout << "Shuma e depozitimit duhet të jetë më e madhe se zero." << endl;
+        }
+    }
+
+    void displayAccountInfo() {
+        cout << "\nDetajet e Llogarisë:\n";
+        cout << "Numri i Llogarisë: " << accountNumber << endl;
+        cout << "Emri i Pronarit: " << accountHolderName << endl;
+        cout << "Bilanci: $" << fixed << setprecision(2) << balance << endl;
+    }
+
+    double getBalance() {
+        return balance;
+    }
 };
 
-void createAccount(BankAccount &account, const string &accNum, const string &accHolder, double initBalance) {
-    account.accountNumber = accNum;
-    account.accountHolderName = accHolder;
-    account.balance = initBalance;
-    cout << "Account created successfully!" << endl;
-}
-
 int main() {
-    BankAccount myAccount;
     string accNum, accHolder;
-    double initBalance;
+    double initBalance, depositAmount;
 
-    cout << "Enter account number: ";
+    cout << "Shkruani numrin e llogarisë: ";
     cin >> accNum;
-    cout << "Enter account holder name: ";
-    cin.ignore(); 
+    cin.ignore();
+    cout << "Shkruani emrin e pronarit të llogarisë: ";
     getline(cin, accHolder);
-    cout << "Enter initial balance: ";
+    cout << "Shkruani bilancin fillestar: ";
     cin >> initBalance;
 
-    createAccount(myAccount, accNum, accHolder, initBalance);
+    BankAccount account(accNum, accHolder, initBalance);
 
-    cout << "\nAccount Details:\n";
-    cout << "Account Number: " << myAccount.accountNumber << endl;
-    cout << "Account Holder: " << myAccount.accountHolderName << endl;
-    cout << "Balance: $" << myAccount.balance << endl;
+    account.displayAccountInfo();
+
+    cout << "\nShkruani shumën që dëshironi të depozitoni: $";
+    cin >> depositAmount;
+    account.deposit(depositAmount);
+
+    account.displayAccountInfo();
 
     return 0;
 }
