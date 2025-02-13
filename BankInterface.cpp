@@ -29,6 +29,15 @@ public:
         }
     }
 
+    void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            cout << "Shuma e tërhequr me sukses: $" << fixed << setprecision(2) << amount << endl;
+        } else {
+            cout << "Tërheqja e dështuar. Fondi i pamjaftueshëm ose shuma është e pavlefshme." << endl;
+        }
+    }
+
     void displayAccountInfo() {
         cout << "\nDetajet e Llogarisë:\n";
         cout << "Numri i Llogarisë: " << accountNumber << endl;
@@ -43,7 +52,8 @@ public:
 
 int main() {
     string accNum, accHolder;
-    double initBalance, depositAmount;
+    double initBalance, depositAmount, withdrawAmount;
+    char choice;
 
     cout << "Shkruani numrin e llogarisë: ";
     cin >> accNum;
@@ -57,11 +67,25 @@ int main() {
 
     account.displayAccountInfo();
 
-    cout << "\nShkruani shumën që dëshironi të depozitoni: $";
-    cin >> depositAmount;
-    account.deposit(depositAmount);
+    cout << "\nA dëshironi të depozitoni para? (Përgjigjuni me 'P' për PO, ose çdo tjetër për të vazhduar): ";
+    cin >> choice;
+    if (choice == 'P' || choice == 'p') {
+        cout << "Shkruani shumën që dëshironi të depozitoni: $";
+        cin >> depositAmount;
+        account.deposit(depositAmount);
+        account.displayAccountInfo();
+    }
 
-    account.displayAccountInfo();
+    cout << "\nA dëshironi të tërhiqni para? (Përgjigjuni me 'T' për PO, ose çdo tjetër për të përfunduar): ";
+    cin >> choice;
+    if (choice == 'T' || choice == 't') {
+        cout << "Shkruani shumën që dëshironi të tërhiqni: $";
+        cin >> withdrawAmount;
+        account.withdraw(withdrawAmount);
+        account.displayAccountInfo();
+    }
+
+    cout << "\nFaleminderit që përdorët sistemin tonë bankar!" << endl;
 
     return 0;
 }
