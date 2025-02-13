@@ -1,54 +1,67 @@
 #include <iostream>
-#include <iomanip>  
+#include <iomanip>
+#include <string>
 
 using namespace std;
 
 class BankAccount {
 private:
+    string accountNumber;
+    string accountHolderName;
     double balance;
 
 public:
-    // Per inicializim te bilancit
-    BankAccount(double initialBalance) {
-        if (initialBalance >= 0) {
-            balance = initialBalance;
-        } else {
-            cout << "Bilanci inicial nuk mund të jetë negativ." << endl;
-            balance = 0;
+    BankAccount(string accNum, string accHolder, double initialBalance) {
+        accountNumber = accNum;
+        accountHolderName = accHolder;
+        balance = (initialBalance >= 0) ? initialBalance : 0;
+        if (initialBalance < 0) {
+            cout << "Bilanci fillestar nuk mund të jetë negativ. Vendoset në $0.00" << endl;
         }
     }
 
-    // Per depozitim
     void deposit(double amount) {
         if (amount > 0) {
             balance += amount;
-            cout << "Keni depozituar me sukses: $" << fixed << setprecision(2) << amount << endl;
-            cout << "Bilanci aktual: $" << fixed << setprecision(2) << balance << endl;
+            cout << "Depozitimi u krye me sukses: $" << fixed << setprecision(2) << amount << endl;
         } else {
-            cout << "Shuma duhet të jetë më e madhe se zero." << endl;
+            cout << "Shuma e depozitimit duhet të jetë më e madhe se zero." << endl;
         }
     }
 
-    // Metoda qe e kthen bilancin
+    void displayAccountInfo() {
+        cout << "\nDetajet e Llogarisë:\n";
+        cout << "Numri i Llogarisë: " << accountNumber << endl;
+        cout << "Emri i Pronarit: " << accountHolderName << endl;
+        cout << "Bilanci: $" << fixed << setprecision(2) << balance << endl;
+    }
+
     double getBalance() {
         return balance;
     }
 };
 
 int main() {
-    double initialBalance = 1000.00;  // Bilanci fillestar ne llogari
-    BankAccount account(initialBalance);
+    string accNum, accHolder;
+    double initBalance, depositAmount;
 
-    cout << "Mirësevini në Bankë!" << endl;
-    cout << "Bilanci juaj aktual: $" << fixed << setprecision(2) << account.getBalance() << endl;
+    cout << "Shkruani numrin e llogarisë: ";
+    cin >> accNum;
+    cin.ignore();
+    cout << "Shkruani emrin e pronarit të llogarisë: ";
+    getline(cin, accHolder);
+    cout << "Shkruani bilancin fillestar: ";
+    cin >> initBalance;
 
-    
-    double depositAmount;
-    cout << "Shkruani shumën që dëshironi të depozitoni: $";
+    BankAccount account(accNum, accHolder, initBalance);
+
+    account.displayAccountInfo();
+
+    cout << "\nShkruani shumën që dëshironi të depozitoni: $";
     cin >> depositAmount;
-
-    //Thirrja e metodes deposit
     account.deposit(depositAmount);
+
+    account.displayAccountInfo();
 
     return 0;
 }
