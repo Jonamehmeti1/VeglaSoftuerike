@@ -1,36 +1,128 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 using namespace std;
 
-// Funksioni qe kryen transferimin e parave
-void transferoPara(double &bilanci) {
-    string llogaria;
-    double shuma;
+class BankAccount {
+private:
+    string accountNumber;
+    string accountHolderName;
+    double balance;
 
-    // Marrja e të dhënave nga përdoruesi
-    cout << "Shkruani emrin e llogarise ku doni te transferoni parate: ";
-    cin.ignore();  // Pastron buferin per te lejuar getline te funksionoje pas cin
-    getline(cin, llogaria);
-
-    cout << "Shkruani shumen qe doni te transferoni: ";
-    cin >> shuma;
-
-    // Kontrolli i bilancit
-    if (shuma > bilanci) {
-        cout << "Transferi nuk mund te kryhet. Bilanci juaj eshte i pamjaftueshem!" << endl;
-    } else {
-        bilanci -= shuma;
-        cout << "Transferi u krye me sukses ne xhirollogarine \"" << llogaria << "\"." << endl;
-        cout << "Bilanci juaj i mbetur eshte: " << bilanci << " EURO." << endl;
+public:
+    BankAccount(string accNum, string accHolder, double initialBalance) {
+        accountNumber = accNum;
+        accountHolderName = accHolder;
+        balance = (initialBalance >= 0) ? initialBalance : 0;
+        if (initialBalance < 0) {
+            cout << "Bilanci fillestar nuk mund të jetë negativ. Vendoset në $0.00" << endl;
+        }
     }
-}
+
+    void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            cout << "Depozitimi u krye me sukses: $" << fixed << setprecision(2) << amount << endl;
+        } else {
+            cout << "Shuma e depozitimit duhet të jetë më e madhe se zero." << endl;
+        }
+    }
+
+    void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            cout << "Shuma e tërhequr me sukses: $" << fixed << setprecision(2) << amount << endl;
+        } else {
+            cout << "Tërheqja e dështuar. Fondi i pamjaftueshëm ose shuma është e pavlefshme." << endl;
+        }
+    }
+
+    void transfer(BankAccount &recipient, double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            recipient.balance += amount;
+            cout << "Transferi u krye me sukses te " << recipient.accountHolderName << " me shumën $" << fixed << setprecision(2) << amount << endl;
+        } else {
+            cout << "Transferi nuk mund të kryhet. Bilanci juaj është i pamjaftueshëm!" << endl;
+        }
+    }
+
+    void displayAccountInfo() {
+        cout << "\nDetajet e Llogarisë:\n";
+        cout << "Numri i Llogarisë: " << accountNumber << endl;
+        cout << "Emri i Pronarit: " << accountHolderName << endl;
+        cout << "Bilanci: $" << fixed << setprecision(2) << balance << endl;
+    }
+
+    double getBalance() {
+        return balance;
+    }
+};
 
 int main() {
-    double bilanci = 1000.00; // Bilanci fillestar i klientit
+    string accNum1, accHolder1, accNum2, accHolder2;
+    double initBalance1, initBalance2, amount;
+    char choice;
 
-    // Thirrja e funksionit per te bere transferin
-    transferoPara(bilanci);
+    // Krijimi i dy llogarive bankare
+    cout << "Krijoni llogarinë e parë\n";
+    cout << "Shkruani numrin e llogarisë: ";
+    cin >> accNum1;
+    cin.ignore();
+    cout << "Shkruani emrin e pronarit të llogarisë: ";
+    getline(cin, accHolder1);
+    cout << "Shkruani bilancin fillestar: ";
+    cin >> initBalance1;
 
+    BankAccount account1(accNum1, accHolder1, initBalance1);
+
+    cout << "\nKrijoni llogarinë e dytë (për transferime)\n";
+    cout << "Shkruani numrin e llogarisë: ";
+    cin >> accNum2;
+    cin.ignore();
+    cout << "Shkruani emrin e pronarit të llogarisë: ";
+    getline(cin, accHolder2);
+    cout << "Shkruani bilancin fillestar: ";
+    cin >> initBalance2;
+
+    BankAccount account2(accNum2, accHolder2, initBalance2);
+
+    // Shfaqja e detajeve të llogarive
+    account1.displayAccountInfo();
+    account2.displayAccountInfo();
+
+    // Depozitim
+    cout << "\nA dëshironi të depozitoni para në llogarinë e parë? (P - PO, ndryshe JO): ";
+    cin >> choice;
+    if (choice == 'P' || choice == 'p') {
+        cout << "Shkruani shumën: $";
+        cin >> amount;
+        account1.deposit(amount);
+        account1.displayAccountInfo();
+    }
+
+    // Tërheqje
+    cout << "\nA dëshironi të tërhiqni para nga llogaria e parë? (T - PO, ndryshe JO): ";
+    cin >> choice;
+    if (choice == 'T' || choice == 't') {
+        cout << "Shkruani shumën: $";
+        cin >> amount;
+        account1.withdraw(amount);
+        account1.displayAccountInfo();
+    }
+
+    // Transferim
+    cout << "\nA dëshironi të transferoni para nga llogaria e parë te llogaria e dytë? (Tr - PO, ndryshe JO): ";
+    cin >> choice;
+    if (choice == 'T' || choice == 't') {
+        cout << "Shkruani shumën për transferim: $";
+        cin >> amount;
+        account1.transfer(account2, amount);
+        account1.displayAccountInfo();
+        account2.displayAccountInfo();
+    }
+
+    cout << "\nFaleminderit që përdorët sistemin tonë bankar!" << endl;
     return 0;
 }
