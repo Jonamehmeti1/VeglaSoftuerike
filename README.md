@@ -1,4 +1,5 @@
 # VeglaSoftuerike
+*sqarim: te gjitha deget jane bere delete pasi jan bere merge por ne activiti dihet te gjitha puna
 Ky projekt eshte zhvilluar ne kuader te lendes Vegla Softuerike.
 
 
